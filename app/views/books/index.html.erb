@@ -1,11 +1,23 @@
 <div>
-  <h1>Book List</h1>
+  <div>
+    <h1>Book List</h1>
+    <%= link_to 'Create Book', new_book_path%>
+  </div>
   <section>
-    <%@books.each do |book| %>
-      <div> 
-        <p> <%= book.name %> </p>
-        <p>  <%= book.description %></p>
-      </div>
+    <%if @books.empty? %>
+      <p> No book found</p>
+    <%else%>
+      <%@books.each do |book| %>
+        <div class='mt-8'>
+          <a href='<%= book_path(book)%>'> <%= book.name %> </a>
+          <p> <%= book.description %> </p>
+          <p> <%= book.release %> </p>
+          <div>
+            <%= link_to 'Edit', edit_book_path(book)%>
+            <%= button_to "delete", book_path(book), :method => :delete %>
+          </div>
+        </div>
+      <%end%>
     <%end%>
   </section>
 </div>
