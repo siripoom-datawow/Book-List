@@ -1,0 +1,11 @@
+<div>
+  <h1>Book List</h1>
+  <section>
+    <%@books.each do |book| %>
+      <div> 
+        <p> <%= book.name %> </p>
+        <p>  <%= book.description %></p>
+      </div>
+    <%end%>
+  </section>
+</div>
