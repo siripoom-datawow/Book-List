@@ -2,42 +2,40 @@
 
 class ReviewsController < ApplicationController
   before_action :find_book
+  before_action :find_review, only: %i[edit update destroy]
 
   def create
-    @review = @book.reviews.create(review_params)
+    @review_create = @book.reviews.create(review_params)
 
-    redirect_to @book
-  rescue StandardError => e
-    Rails.logger.error(e.message)
+    if @review_create.persisted?
+      redirect_to @book
+    elsif !@review_create.valid?
+      raise ActiveRecord::RecordInvalid, @review_create
+    else
+      raise ActiveRecord::RecordNotSaved, @book
+    end
   end
 
   def edit
-    @review = Review.find(params[:id])
-  rescue StandardError => e
-    Rails.logger.error(e.message)
+    return if @review.present?
+
+    rails ActiveRecord: RecordNotFound
   end
 
   def update
-    @review = Review.find(params[:id])
-    if @review.update(review_params)
-      flash[:success] = 'Review update completed'
-      redirect_to @book
-    else
-      flash[:error] = 'Review update fail!'
-      render :index
-    end
-  rescue StandardError => e
-    Rails.logger.error(e.message)
+    raise ActiveRecord::RecordNotSaved, @review unless @review.update(review_params)
+
+    flash[:success] = 'Review update completed'
+    redirect_to @book
   end
 
   def destroy
-    begin
-      @review = Review.find(params[:id])
-      @review.destroy
-    rescue StandardError => e
-      Rails.logger.error(e.message)
+    if @review.destroy
+      redirect_to @book
+    else
+      flash[:alert] = 'Failed to delete the review'
+      redirect_back(fallback_location: root_path)
     end
-    redirect_to @book
   end
 
   private
@@ -48,5 +46,9 @@ class ReviewsController < ApplicationController
 
   def find_book
     @book = Book.find(params[:book_id])
+  end
+
+  def find_review
+    @review = Review.find(params[:id])
   end
 end
