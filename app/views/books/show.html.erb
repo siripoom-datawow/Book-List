@@ -1,0 +1,45 @@
+<div>
+  <%= link_to 'Back', books_path%>
+  <section>
+    <div>
+      <p>name:</p>
+      <h1 class="font-bold text-4xl"><%= @book.name%> </h1>
+      <% if  @reviews.length > 0%>
+        <p>rating: <%= ( @reviews.reduce(0) { |prev, curr| prev + curr.star }).to_f / @book.reviews.length %></p>
+      <% else %>
+        <p>No reviews available</p>
+      <% end %>
+    </div>
+    <p>description:</p>
+    <p class='text-5xl mt-8'><%= @book.description%> </p>
+     <p>release:</p>
+    <p class='text-5xl mt-8'><%= @book.release%> </p>
+  </section>
+  <%= form_with model: [@book , @book.reviews.build] do |form|%>
+    <p>
+      <%= form.label :comment %><br>
+      <%= form.text_field :comment %>
+    </p>
+    <p>
+      <%= form.label :star %><br>
+      <%= form.number_field :star, in: 0..5, step: 0.1 , value: 0.0%>
+    </p>
+    <p>
+        <%= form.submit %>
+    </p>
+  <%end%>
+  <section>
+    <% if @reviews.length > 0 %>
+      <% @reviews.each do |review| %>
+      <div>
+        <p> <%= review.comment%> </p>
+        <p>star: <%= review.star%></p>
+      </div>
+      <div>
+        <%= link_to 'Edit', edit_book_review_path(@book,review)%>
+        <%= button_to "Delete", book_review_path(@book,review), :method => :delete %>
+      </div>
+      <%end%>
+    <%end%>
+  </section>
+</div>
