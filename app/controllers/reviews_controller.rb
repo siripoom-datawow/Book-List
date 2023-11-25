@@ -16,11 +16,7 @@ class ReviewsController < ApplicationController
     end
   end
 
-  def edit
-    return if @review.present?
-
-    rails ActiveRecord: RecordNotFound
-  end
+  def edit; end
 
   def update
     raise ActiveRecord::RecordNotSaved, @review unless @review.update(review_params)
@@ -46,9 +42,11 @@ class ReviewsController < ApplicationController
 
   def find_book
     @book = Book.find(params[:book_id])
+    raise ActiveRecord::RecordNotFound unless @book.present?
   end
 
   def find_review
     @review = Review.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @review.present?
   end
 end

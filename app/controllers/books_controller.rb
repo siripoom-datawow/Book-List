@@ -8,8 +8,6 @@ class BooksController < ApplicationController
   end
 
   def show
-    raise ActiveRecord::RecordNotFound unless @book.present?
-
     @reviews = Review.where(book_id: params[:id])
   end
 
@@ -26,11 +24,7 @@ class BooksController < ApplicationController
     redirect_to @book
   end
 
-  def edit
-    return if @book.present?
-
-    raise ActiveRecord::RecordNotFound
-  end
+  def edit; end
 
   def update
     raise ActiveRecord::RecordNotSaved, @book unless @book.update(book_params)
@@ -52,5 +46,6 @@ class BooksController < ApplicationController
 
   def find_single_book
     @book = Book.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @book.present?
   end
 end
