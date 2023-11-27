@@ -5,4 +5,18 @@ class Book < ApplicationRecord
 
   validates :name, presence: true
   validates :release, presence: true
+
+  def all__reviews_comment
+    reviews.pluck(:comment).join(', ')
+  end
+
+  def get_avg_star
+    if reviews.present?
+      star_sum = reviews.reduce(0) {|prev,curr| prev+curr.star}
+
+      star_sum/(reviews.length)
+    else
+      return "No review"
+    end
+  end
 end
