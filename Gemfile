@@ -56,8 +56,6 @@ group :development, :test do
   gem 'debug', platforms: %i[mri mswin mswin64 mingw x64_mingw]
 
   gem 'factory_bot_rails', '~> 6.4', '>= 6.4.2'
-
-
 end
 
 group :development do
@@ -89,6 +87,4 @@ group :test do
   gem 'shoulda-matchers', '~> 5.3'
 
   gem 'faker', '~> 3.2', '>= 3.2.2'
-
-
 end

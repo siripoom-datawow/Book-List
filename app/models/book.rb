@@ -11,12 +11,10 @@ class Book < ApplicationRecord
   end
 
   def get_avg_star
-    if reviews.present?
-      star_sum = reviews.reduce(0) {|prev,curr| prev+curr.star}
+    return 'No review' unless reviews.present?
 
-      star_sum/(reviews.length)
-    else
-      return "No review"
-    end
+    star_sum = reviews.reduce(0) { |prev, curr| prev + curr.star }
+
+    star_sum / reviews.length
   end
 end

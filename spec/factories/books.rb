@@ -2,11 +2,10 @@
 
 require 'faker'
 
-
 FactoryBot.define do
   factory :book do
-    name { Faker::Name.name}
-    description { Faker::Lorem.characters(number:20)}
-    release {Faker::Time.between(from: DateTime.now - 1, to: DateTime.now, format: :default)}
+    name { Faker::Name.name }
+    description { Faker::Lorem.characters(number: 20) }
+    release { '2023-11-07 17:12:00' }
   end
 end

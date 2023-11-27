@@ -38,16 +38,16 @@ RSpec.describe Book, type: :model do
   end
 
   describe 'Get average star when present' do
-    subject {book_a.get_avg_star}
-    let(:book_a) {create(:book)}
-    it "return No star" do
+    subject { book_a.get_avg_star }
+    let(:book_a) { create(:book) }
+    it 'return No star' do
       expect(subject).to eq('No review')
     end
 
-    let(:review_a) {create(:review)}
-    let(:review_b) {create(:review)}
-    let(:review_c) {create(:review)}
-    it "return correct average" do
+    let(:review_a) { create(:review) }
+    let(:review_b) { create(:review) }
+    let(:review_c) { create(:review) }
+    it 'return correct average' do
       expect(subject).to eq(Book.find(book_a.id).get_avg_star)
     end
   end
