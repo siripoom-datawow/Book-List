@@ -11,7 +11,7 @@ RSpec.describe ReviewsController, type: :controller do
   end
 
   describe 'POST #create' do
-    subject { post :create, params: }
+    subject { post :create, params:, format: :json}
     let(:book) { create(:book) }
 
     context 'when validation success' do
@@ -25,7 +25,8 @@ RSpec.describe ReviewsController, type: :controller do
     context 'when validation fail' do
       let(:params) { { book_id: book.id, review: attributes_for(:review, comment: '') } }
       it 'raise RecordInvalid  if no review detail' do
-        expect { subject }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(subject.status).to eq(422)
+        expect(JSON.parse(response.body)["error"]).to include("Validation failed")
       end
     end
 

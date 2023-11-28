@@ -23,9 +23,10 @@ RSpec.describe BooksController, type: :controller do
     end
 
     context 'When Book not found' do
-      let(:params) { { id: -1 } }
+      let(:params) { { id: -1 , format: :json}}
       it 'raise error not found' do
-        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(subject.status).to eq(404)
+      expect(JSON.parse(response.body)["error"]).to eq("Data not found")
       end
     end
   end
@@ -43,15 +44,16 @@ RSpec.describe BooksController, type: :controller do
     end
 
     context 'when validation fail' do
-      let(:params) { { book: { name: '', description: '', release: '' } } }
+      let(:params) { { book: { name: '', description: '', release: '' }, format: :json } }
       it 'raise RecordInvalid  if no book detail' do
-        expect { subject }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(subject.status).to eq(422)
+        expect(JSON.parse(response.body)["error"]).to include("Validation failed")
       end
     end
   end
 
   describe 'PUT #update' do
-    subject { put :update, params: { id: book.id, book: book_attr } }
+    subject { put :update, params: { id: book.id, book: book_attr }, format: :json }
 
     let!(:book) { create(:book) }
     context 'when validation success' do
@@ -65,7 +67,8 @@ RSpec.describe BooksController, type: :controller do
     context 'when validation fail' do
       let(:book_attr) { attributes_for(:book, name: '') }
       it 'raise RecordInvalid if no book detail' do
-        expect { subject }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(subject.status).to eq(422)
+        expect(JSON.parse(response.body)["error"]).to include("Validation failed")
       end
     end
   end
