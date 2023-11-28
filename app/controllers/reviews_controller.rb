@@ -6,7 +6,7 @@ class ReviewsController < ApplicationController
   before_action :find_review, only: %i[edit update destroy]
 
   def create
-    @review_create = @book.reviews.create!(review_params)
+    @review_create = @book.reviews.create!(review_params.merge(user_id: current_user.id))
     redirect_to @book
   end
 

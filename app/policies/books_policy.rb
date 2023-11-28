@@ -1,5 +1,8 @@
-class PostPolicy < ApplicationPolicy
-  def update?
-    
+class BooksPolicy < ApplicationPolicy
+  class Scope < Scope
+    # NOTE: Be explicit about which records you allow access to!
+    # def resolve
+    #   scope.all
+    # end
   end
 end

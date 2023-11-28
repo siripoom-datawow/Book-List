@@ -5,6 +5,7 @@ class BooksController < ApplicationController
   before_action :find_single_book, only: %i[show edit update destroy]
 
   def index
+    puts "User ID is=====> #{current_user.id}"
     @books = Book.all
   end
 
@@ -17,7 +18,8 @@ class BooksController < ApplicationController
   end
 
   def create
-    @book = Book.new(book_params)
+    @user = User.find(current_user.id)
+    @book = @user.books.build(book_params)
     @book.save!
     redirect_to @book
   end
