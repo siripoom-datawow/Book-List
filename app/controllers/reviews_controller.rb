@@ -23,7 +23,7 @@ class ReviewsController < ApplicationController
   def destroy
     authorize @review, policy_class: ReviewPolicy
     if @review.destroy
-
+      redirect_to @book
     else
       flash[:alert] = 'Failed to delete the review'
       redirect_back(fallback_location: root_path)
