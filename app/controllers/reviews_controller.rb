@@ -13,6 +13,7 @@ class ReviewsController < ApplicationController
   def edit; end
 
   def update
+    authorize @review, policy_class: ReviewPolicy
     raise ActiveRecord::RecordNotSaved, @review unless @review.update(review_params)
 
     flash[:success] = 'Review update completed'
@@ -20,8 +21,9 @@ class ReviewsController < ApplicationController
   end
 
   def destroy
+    authorize @review, policy_class: ReviewPolicy
     if @review.destroy
-      redirect_to @book
+
     else
       flash[:alert] = 'Failed to delete the review'
       redirect_back(fallback_location: root_path)

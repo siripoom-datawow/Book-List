@@ -14,8 +14,10 @@
           <p> <%= book.description %> </p>
           <p> <%= book.release %> </p>
           <div>
-            <%= link_to 'Edit', edit_book_path(book)%>
-            <%= button_to "delete", book_path(book), :method => :delete %>
+            <% if policy(book).update? %>
+              <%= link_to 'Edit', edit_book_path(book)%>
+              <%= button_to "delete", book_path(book), :method => :delete %>
+            <% end %>
           </div>
         </div>
       <%end%>

@@ -27,12 +27,14 @@ class BooksController < ApplicationController
   def edit; end
 
   def update
+    authorize @book, policy_class: BookPolicy
     @book.update!(book_params)
     flash[:success] = 'Book update completed'
     redirect_to @book
   end
 
   def destroy
+    authorize @book, policy_class: BookPolicy
     flash[:alert] = 'Failed to delete the book' unless @book.destroy
     redirect_to root_path
   end

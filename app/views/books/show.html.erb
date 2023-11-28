@@ -35,10 +35,12 @@
         <p> <%= review.comment%> </p>
         <p>star: <%= review.star%></p>
       </div>
-      <div>
-        <%= link_to 'Edit', edit_book_review_path(@book,review)%>
-        <%= button_to "Delete", book_review_path(@book,review), :method => :delete %>
-      </div>
+      <% if review.user_id == current_user.id%>
+        <div>
+          <%= link_to 'Edit', edit_book_review_path(@book,review)%>
+          <%= button_to "Delete", book_review_path(@book,review), :method => :delete %>
+        </div>
+      <%end%>
       <%end%>
     <%end%>
   </section>
