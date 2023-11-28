@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class ReviewPolicy < ApplicationPolicy
   attr_reader :user, :review
 
-  def initialize(user,review)
+  def initialize(user, review)
     @user = user
     @review = review
   end
@@ -9,6 +11,7 @@ class ReviewPolicy < ApplicationPolicy
   def update?
     user.id == review.user_id
   end
+
   def destroy?
     update?
   end
