@@ -5,15 +5,8 @@ class ReviewsController < ApplicationController
   before_action :find_review, only: %i[edit update destroy]
 
   def create
-    @review_create = @book.reviews.create(review_params)
-
-    if @review_create.persisted?
-      redirect_to @book
-    elsif !@review_create.valid?
-      raise ActiveRecord::RecordInvalid, @review_create
-    else
-      raise ActiveRecord::RecordNotSaved, @book
-    end
+    @review_create = @book.reviews.create!(review_params)
+    redirect_to @book
   end
 
   def edit; end
@@ -42,11 +35,9 @@ class ReviewsController < ApplicationController
 
   def find_book
     @book = Book.find(params[:book_id])
-    raise ActiveRecord::RecordNotFound unless @book.present?
   end
 
   def find_review
     @review = Review.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless @review.present?
   end
 end

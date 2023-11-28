@@ -17,18 +17,14 @@ class BooksController < ApplicationController
 
   def create
     @book = Book.new(book_params)
-    raise ActiveRecord::RecordInvalid, @book unless @book.valid?
-    raise ActiveRecord::RecordNotSaved, @book unless @book.save
-
-    flash[:success] = 'Book create completed'
+    @book.save!
     redirect_to @book
   end
 
   def edit; end
 
   def update
-    raise ActiveRecord::RecordNotSaved, @book unless @book.update(book_params)
-
+    @book.update!(book_params)
     flash[:success] = 'Book update completed'
     redirect_to @book
   end
@@ -46,6 +42,5 @@ class BooksController < ApplicationController
 
   def find_single_book
     @book = Book.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless @book.present?
   end
 end
