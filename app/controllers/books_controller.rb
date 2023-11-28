@@ -5,12 +5,12 @@ class BooksController < ApplicationController
   before_action :find_single_book, only: %i[show edit update destroy]
 
   def index
-    puts "User ID is=====> #{current_user.id}"
-    @books = Book.all
+    @books = Book.order(:name).page(params[:page]).per(10)
+    @total_books = Book.count
   end
 
   def show
-    @reviews = Review.where(book_id: params[:id])
+    @reviews = Review.where(book_id: params[:id]).page(params[:page]).per(10)
   end
 
   def new

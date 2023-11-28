@@ -1,42 +1,44 @@
-<div>
+<div class='w-full h-full flex flex-col '>
   <%= link_to 'Back', books_path%>
   <section>
-    <div>
+    <div class="flex gap-2 mt-8">
       <p>name:</p>
       <h1 class="font-bold text-4xl"><%= @book.name%> </h1>
+      <p>rating: </p>
       <% if  @reviews.length > 0%>
-        <p>rating: <%= ( @reviews.reduce(0) { |prev, curr| prev + curr.star }).to_f / @book.reviews.length %></p>
+        <p class="font-bold text-4xl"><%= ( @reviews.reduce(0) { |prev, curr| prev + curr.star }).to_f / @book.reviews.length %></p>
       <% else %>
         <p>No reviews available</p>
       <% end %>
     </div>
-    <p>description:</p>
-    <p class='text-5xl mt-8'><%= @book.description%> </p>
-     <p>release:</p>
-    <p class='text-5xl mt-8'><%= @book.release%> </p>
+    <p class="mt-8">description:</p>
+    <p class='text-4xl'><%= @book.description%> </p>
+     <p class="mt-8">release:</p>
+    <p class='text-4xl'><%= @book.release%> </p>
   </section>
-  <%= form_with model: [@book , @book.reviews.build] do |form|%>
-    <p>
+  <%= form_with model: [@book , @book.reviews.build] do |form| %>
+    <p class="flex gap-2 mt-8 ">
       <%= form.label :comment %><br>
-      <%= form.text_field :comment %>
+      <%= form.text_field :comment ,class: "bg-gray-300"%>
     </p>
-    <p>
+    <p class="flex gap-2 ">
       <%= form.label :star %><br>
-      <%= form.number_field :star, in: 0..5, step: 0.1 , value: 0.0%>
+      <%= form.number_field :star, in: 0..5, step: 0.1 , value: 0.0, class: "bg-gray-300"%>
     </p>
-    <p>
+    <p class="font-bold">
         <%= form.submit %>
     </p>
   <%end%>
+    <h1 class="font-bold mt-8">Reviews</h1>
   <section>
     <% if @reviews.length > 0 %>
       <% @reviews.each do |review| %>
-      <div>
+      <div class="flex gap-2">
         <p> <%= review.comment%> </p>
         <p>star: <%= review.star%></p>
       </div>
       <% if review.user_id == current_user.id%>
-        <div>
+        <div class="flex gap-2">
           <%= link_to 'Edit', edit_book_review_path(@book,review)%>
           <%= button_to "Delete", book_review_path(@book,review), :method => :delete %>
         </div>
@@ -44,4 +46,5 @@
       <%end%>
     <%end%>
   </section>
+    <%= paginate @reviews %>
 </div>
