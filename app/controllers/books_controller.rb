@@ -5,12 +5,32 @@ class BooksController < ApplicationController
   before_action :find_single_book, only: %i[show edit update destroy]
 
   def index
-    @books = Book.order(:name).page(params[:page]).per(10)
+    @cached_books = Rails.cache.read("all_books_list")
+
+    if  @cached_books.present?
+      @books = Kaminari.paginate_array(@cached_books).page(params[:page]).per(10)
+    else
+      @books = Book.order(:name).page(params[:page]).per(10)
+      puts "=========Data has been cached==============="
+      Rails.cache.write("all_books_list", Book.all.to_a)
+    end
+
     @total_books = Book.count
   end
 
   def show
-    @reviews = Review.where(book_id: params[:id]).page(params[:page]).per(10)
+    @cached_reviews = Rails.cache.read("all_reviews_lists")
+    @querried_review = @book.reviews
+
+    if  @cached_reviews.present?
+      @reviews = Kaminari.paginate_array(@cached_reviews).page(params[:page]).per(10)
+    else
+      @reviews = @querried_review.page(params[:page]).per(10)
+      puts "=========Data has been cached==============="
+      Rails.cache.write("all_reviews_lists", @querried_review.to_a)
+    end
+
+    @total_reviews = @querried_review.count
   end
 
   def new
@@ -21,6 +41,7 @@ class BooksController < ApplicationController
     @user = User.find(current_user.id)
     @book = @user.books.build(book_params)
     @book.save!
+
     redirect_to @book
   end
 

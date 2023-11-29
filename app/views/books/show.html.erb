@@ -46,5 +46,9 @@
       <%end%>
     <%end%>
   </section>
-    <%= paginate @reviews %>
+     <div class="mt-8 flex gap-2">
+      <h2 class="font-bold">Page <%= @reviews.current_page %> from <%= @reviews.total_pages %> ||</h2>
+      <%= paginate @reviews %>
+      <h2 class="font-bold">Total reviews: <%=  @total_reviews%></h2>
+    </div>
 </div>
