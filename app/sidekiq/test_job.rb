@@ -1,7 +1,7 @@
 class TestJob
   include Sidekiq::Job
 
-  def perform(id)
-    puts Book.find(id).name
+  def perform
+    puts "hello world"
   end
 end

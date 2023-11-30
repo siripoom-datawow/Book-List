@@ -57,6 +57,8 @@ gem 'config', '~> 5.0'
 
 gem 'sidekiq', '~> 7.2'
 
+gem 'sidekiq-cron', '~> 1.11'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mswin mswin64 mingw x64_mingw]
