@@ -2,16 +2,18 @@
 
 class BooksController < ApplicationController
   before_action :authenticate_user!
+  before_action :cached_books
   before_action :find_single_book, only: %i[show edit update destroy]
 
   def index
-    @cached_books = Rails.cache.read("all_books_list")
+    @querried_book = Book.all.to_a
 
     if  @cached_books.present?
-      @books = Kaminari.paginate_array(@cached_books).page(params[:page]).per(10)
+      @books = kaminari_pagination(@cached_books, 10)
+
     else
-      @books = Book.order(:name).page(params[:page]).per(10)
-      Rails.cache.write("all_books_list", Book.all.to_a)
+      @books = kaminari_pagination(@querried_book, 10)
+      Rails.cache.write("all_books_list", @querried_book)
     end
 
     @total_books = Book.count
@@ -21,10 +23,11 @@ class BooksController < ApplicationController
     @cached_reviews = Rails.cache.read("all_reviews_lists")
     @querried_review = @book.reviews
 
-    if  @cached_reviews.present?
-      @reviews = Kaminari.paginate_array(@cached_reviews).page(params[:page]).per(10)
+    if @cached_reviews.present?
+      @reviews = kaminari_pagination(@cached_reviews.to_a, 10)
+
     else
-      @reviews = @querried_review.page(params[:page]).per(10)
+      @reviews = kaminari_pagination(@querried_review.to_a, 10)
       Rails.cache.write("all_reviews_lists", @querried_review.to_a)
     end
 
@@ -36,6 +39,10 @@ class BooksController < ApplicationController
   end
 
   def create
+    if  @cached_books.present?
+
+    else
+    end
     @book = Book.create!(book_params.merge(user_id: current_user.id))
 
     redirect_to @book
@@ -68,5 +75,13 @@ class BooksController < ApplicationController
   def find_single_book
     @cache_book = Rails.cache.read('book')
     @book = Book.find(params[:id])
+  end
+
+  def cached_books
+    @cached_books = Rails.cache.read("all_books_list")
+  end
+
+  def kaminari_pagination (array,page)
+    Kaminari.paginate_array(array).page(params[:page]).per(page)
   end
 end

@@ -22,7 +22,7 @@ class ReviewsController < ApplicationController
 
   def destroy
     authorize @review, policy_class: ReviewPolicy
-    
+
     if @review.destroy
       redirect_to @book
     else
