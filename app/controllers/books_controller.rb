@@ -2,19 +2,20 @@
 
 class BooksController < ApplicationController
   include UpdateCacheConcern
+
   before_action :authenticate_user!
   before_action :cached_books
   before_action :find_all_book
   before_action :find_single_book, only: %i[show edit update destroy]
 
-
   def index
-    if  @cached_books.present?
+    if @cached_books.present?
       @books = kaminari_pagination(@cached_books, 10)
 
     else
-      @books = kaminari_pagination(  @querried_all_books, 10)
-      Rails.cache.write("all_books_list",   @querried_all_books)
+      @books = kaminari_pagination(@querried_all_books, 10)
+
+      Rails.cache.write('all_books_list', @querried_all_books)
     end
 
     @total_books = Book.count
@@ -42,8 +43,7 @@ class BooksController < ApplicationController
   def create
     @book = Book.create!(book_params.merge(user_id: current_user.id))
 
-    update_cache(find_all_book,"all_books_list", @querried_all_books) if  @cached_books.present?
-
+    update_cache(find_all_book, 'all_books_list', @querried_all_books) if @cached_books.present?
 
     redirect_to @book
   end
@@ -55,7 +55,7 @@ class BooksController < ApplicationController
 
     @book.update!(book_params)
 
-    update_cache(find_all_book,"all_books_list", @querried_all_books) if  @cached_books.present?
+    update_cache(find_all_book, 'all_books_list', @querried_all_books) if @cached_books.present?
 
     flash[:success] = 'Book update completed'
 
@@ -67,7 +67,7 @@ class BooksController < ApplicationController
 
     flash[:alert] = 'Failed to delete the book' unless @book.destroy
 
-    update_cache(find_all_book,"all_books_list", @querried_all_books) if  @cached_books.present?
+    update_cache(find_all_book, 'all_books_list', @querried_all_books) if @cached_books.present?
 
     redirect_to root_path
   end
@@ -84,17 +84,14 @@ class BooksController < ApplicationController
   end
 
   def find_all_book
-      @querried_all_books = Book.all.to_a
+    @querried_all_books = Book.all.to_a
   end
 
   def cached_books
-    @cached_books = Rails.cache.read("all_books_list")
+    @cached_books = Rails.cache.read('all_books_list')
   end
 
-  def kaminari_pagination (array,page)
+  def kaminari_pagination(array, page)
     Kaminari.paginate_array(array).page(params[:page]).per(page)
   end
-
-
-
 end

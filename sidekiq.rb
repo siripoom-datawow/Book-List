@@ -1,7 +1,7 @@
-redis_host = Settings.redis.host.presence || 'localhost'
-redis_port = Settings.redis.port.presence || 6379
+# frozen_string_literal: true
 
-url =  "redis://#{redis_host}:#{redis_port}"
+Settings.redis.host.presence || 'localhost'
+Settings.redis.port.presence || 6379
 
 Sidekiq.configure_server do |config|
   config.redis = { url: $redis.id }

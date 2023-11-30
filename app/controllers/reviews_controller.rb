@@ -2,6 +2,7 @@
 
 class ReviewsController < ApplicationController
   include UpdateCacheConcern
+
   before_action :authenticate_user!
   before_action :find_book
   before_action :cached_reviews
@@ -11,7 +12,7 @@ class ReviewsController < ApplicationController
   def create
     @review_create = Review.create!(review_params.merge(user_id: current_user.id, book_id: @book.id))
 
-    update_cache(find_all_reviews,"all_reviews_#{params[:book_id]}", @reviews) if  @cached_reviews.present?
+    update_cache(find_all_reviews, "all_reviews_#{params[:book_id]}", @reviews) if @cached_reviews.present?
 
     redirect_to @book
   end
@@ -23,7 +24,7 @@ class ReviewsController < ApplicationController
 
     raise ActiveRecord::RecordNotSaved, @review unless @review.update(review_params)
 
-    update_cache(find_all_reviews,"all_reviews_#{params[:book_id]}", @reviews) if  @cached_reviews.present?
+    update_cache(find_all_reviews, "all_reviews_#{params[:book_id]}", @reviews) if @cached_reviews.present?
 
     flash[:success] = 'Review update completed'
     redirect_to @book
@@ -33,7 +34,7 @@ class ReviewsController < ApplicationController
     authorize @review, policy_class: ReviewPolicy
 
     if @review.destroy
-      update_cache(find_all_reviews,"all_reviews_#{params[:book_id]}", @reviews) if  @cached_reviews.present?
+      update_cache(find_all_reviews, "all_reviews_#{params[:book_id]}", @reviews) if @cached_reviews.present?
 
       redirect_to @book
     else
