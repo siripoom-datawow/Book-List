@@ -55,6 +55,8 @@ gem 'rails-erd', '~> 1.5', '>= 1.5.2'
 
 gem 'config', '~> 5.0'
 
+gem 'sidekiq', '~> 7.2'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mswin mswin64 mingw x64_mingw]
@@ -91,4 +93,7 @@ group :test do
   gem 'shoulda-matchers', '~> 5.3'
 
   gem 'faker', '~> 3.2', '>= 3.2.2'
+
+  gem 'rspec-sidekiq', '~> 4.1'
+
 end
