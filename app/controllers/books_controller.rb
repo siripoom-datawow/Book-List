@@ -11,7 +11,6 @@ class BooksController < ApplicationController
       @books = Kaminari.paginate_array(@cached_books).page(params[:page]).per(10)
     else
       @books = Book.order(:name).page(params[:page]).per(10)
-      puts "=========Data has been cached==============="
       Rails.cache.write("all_books_list", Book.all.to_a)
     end
 
@@ -26,7 +25,6 @@ class BooksController < ApplicationController
       @reviews = Kaminari.paginate_array(@cached_reviews).page(params[:page]).per(10)
     else
       @reviews = @querried_review.page(params[:page]).per(10)
-      puts "=========Data has been cached==============="
       Rails.cache.write("all_reviews_lists", @querried_review.to_a)
     end
 
@@ -38,9 +36,7 @@ class BooksController < ApplicationController
   end
 
   def create
-    @user = User.find(current_user.id)
-    @book = @user.books.build(book_params)
-    @book.save!
+    @book = Book.create!(book_params.merge(user_id: current_user.id))
 
     redirect_to @book
   end
@@ -49,8 +45,11 @@ class BooksController < ApplicationController
 
   def update
     authorize @book, policy_class: BookPolicy
+
     @book.update!(book_params)
+
     flash[:success] = 'Book update completed'
+
     redirect_to @book
   end
 
@@ -67,6 +66,7 @@ class BooksController < ApplicationController
   end
 
   def find_single_book
+    @cache_book = Rails.cache.read('book')
     @book = Book.find(params[:id])
   end
 end
