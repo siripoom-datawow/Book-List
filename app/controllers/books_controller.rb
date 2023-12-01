@@ -36,7 +36,6 @@ class BooksController < ApplicationController
     add_views_cache
 
     @total_reviews = @querried_review.count
-
   end
 
   def new
@@ -99,7 +98,7 @@ class BooksController < ApplicationController
   end
 
   def add_views_cache
-    @views_cache = Rails.cache.read("views").dup || {}
+    @views_cache = Rails.cache.read('views').dup || {}
 
     if @views_cache.key?(@book.id)
       @views_cache[@book.id] += 1
@@ -107,6 +106,6 @@ class BooksController < ApplicationController
       @views_cache[@book.id] = 1
     end
 
-    Rails.cache.write("views", @views_cache)
+    Rails.cache.write('views', @views_cache)
   end
 end

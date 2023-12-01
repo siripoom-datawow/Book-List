@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateBookRanks < ActiveRecord::Migration[7.1]
   def change
     create_table :book_ranks do |t|

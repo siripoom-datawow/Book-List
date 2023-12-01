@@ -97,5 +97,4 @@ group :test do
   gem 'faker', '~> 3.2', '>= 3.2.2'
 
   gem 'rspec-sidekiq', '~> 4.1'
-
 end
