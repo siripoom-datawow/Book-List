@@ -1,13 +1,15 @@
 <div class='w-full h-full flex flex-col '>
   <%= link_to 'Back', books_path%>
    <section>
-      <h1>Date</h1>
-      <div>
-         <% @ranks.each do |rank|%>
-         <a href='<%= rank_path(rank)%>'> Date: <%= rank.date %> </a>
-         <%end%>
+      <h1 class = "text-4xl mt-8">Date ⌛</h1>
+      <div class = "flex flex-col">
+         <% @ranks.each_with_index do |rank, index| %>
+            <%unless index === @ranks.length-1%>
+               <a href='<%= rank_path(rank) %>'> Date: <%= rank.date.to_s.split(" ")[0] %> </a>
+            <%end%>
+         <% end %>
       </div>
-      <h1>Ranking</h1>
+      <h1 class = "text-4xl mt-8">Ranking 🌟</h1>
    </section>
    <section>
       <%@book_ranks.each_with_index do |book,index|%>

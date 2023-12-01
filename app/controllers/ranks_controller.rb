@@ -24,7 +24,7 @@ class RanksController < ApplicationController
     else
       @ranks = Rank.all
       @rank = Rank.find(params[:id])
-      @book_ranks = BookRank.where(rank_id: params[:id])
+      @book_ranks = BookRank.where(rank_id: params[:id]).order(order_id: :asc)
 
       Rails.cache.write("ranks", @ranks,  expires_in: 1.day)
       Rails.cache.write("book_ranks_#{params[:id]}", @book_ranks,  expires_in: 1.day)

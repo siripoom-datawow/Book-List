@@ -1,3 +1,7 @@
-my_first_job:
-  cron: "*/1 * * * * *"
-  class: "TestJob"
+update_views_to_DB:
+  cron: "* * * * * *"
+  class: "UpdateView"
+
+ranking_summation:
+  cron: "0 0 * * *"
+  class: "RankingSummation"

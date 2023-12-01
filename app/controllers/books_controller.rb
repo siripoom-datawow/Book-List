@@ -33,7 +33,10 @@ class BooksController < ApplicationController
       Rails.cache.write("all_reviews_#{params[:id]}", @querried_review.to_a)
     end
 
+    add_views_cache
+
     @total_reviews = @querried_review.count
+
   end
 
   def new
@@ -93,5 +96,17 @@ class BooksController < ApplicationController
 
   def kaminari_pagination(array, page)
     Kaminari.paginate_array(array).page(params[:page]).per(page)
+  end
+
+  def add_views_cache
+    @views_cache = Rails.cache.read("views").dup || {}
+
+    if @views_cache.key?(@book.id)
+      @views_cache[@book.id] += 1
+    else
+      @views_cache[@book.id] = 1
+    end
+
+    Rails.cache.write("views", @views_cache)
   end
 end
