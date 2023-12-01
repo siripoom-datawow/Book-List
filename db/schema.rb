@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,44 +10,63 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 20_231_128_060_923) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_01_013148) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+  enable_extension "plpgsql"
 
-  create_table 'books', force: :cascade do |t|
-    t.string 'name', null: false
-    t.text 'description'
-    t.datetime 'release', null: false
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.integer 'user_id'
-    t.index ['user_id'], name: 'index_books_on_user_id'
+  create_table "book_ranks", force: :cascade do |t|
+    t.bigint "book_id", null: false
+    t.bigint "rank_id", null: false
+    t.integer "view"
+    t.integer "order_id", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_book_ranks_on_book_id"
+    t.index ["rank_id"], name: "index_book_ranks_on_rank_id"
   end
 
-  create_table 'reviews', force: :cascade do |t|
-    t.string 'comment', null: false
-    t.float 'star'
-    t.bigint 'book_id', null: false
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.integer 'user_id'
-    t.index ['book_id'], name: 'index_reviews_on_book_id'
-    t.index ['user_id'], name: 'index_reviews_on_user_id'
+  create_table "books", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.datetime "release", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_books_on_user_id"
   end
 
-  create_table 'users', force: :cascade do |t|
-    t.string 'email', default: '', null: false
-    t.string 'encrypted_password', default: '', null: false
-    t.string 'reset_password_token'
-    t.datetime 'reset_password_sent_at'
-    t.datetime 'remember_created_at'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.index ['email'], name: 'index_users_on_email', unique: true
-    t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
+  create_table "ranks", force: :cascade do |t|
+    t.datetime "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  add_foreign_key 'books', 'users'
-  add_foreign_key 'reviews', 'books'
-  add_foreign_key 'reviews', 'users'
+  create_table "reviews", force: :cascade do |t|
+    t.string "comment", null: false
+    t.float "star"
+    t.bigint "book_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["book_id"], name: "index_reviews_on_book_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  add_foreign_key "book_ranks", "books"
+  add_foreign_key "book_ranks", "ranks"
+  add_foreign_key "books", "users"
+  add_foreign_key "reviews", "books"
+  add_foreign_key "reviews", "users"
 end
