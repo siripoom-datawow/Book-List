@@ -10,6 +10,6 @@ class RankingSummation
     # Create new rank and bookrank for new day
     NewRankBookrankService.new.perform
 
-    puts "Rank summation updated"
+    puts 'Rank summation updated'
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NewRankBookrankService
   def perform
     @new_rank = Rank.create({ date: Date.today })

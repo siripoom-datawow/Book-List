@@ -4,7 +4,6 @@
 require 'spec_helper'
 require 'sidekiq/testing'
 
-
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdateViewService
   def perform
     @views = Rails.cache.read('views')
@@ -15,7 +17,6 @@ class UpdateViewService
         else
           puts '========Fail========='
         end
-
       end
     else
       puts 'No update'
