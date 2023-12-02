@@ -3,5 +3,5 @@ update_views_to_DB:
   class: "UpdateView"
 
 ranking_summation:
-  cron: "0 0 * * *"
+  cron: "0 17 * * *"
   class: "RankingSummation"
