@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module V1
   class API < Grape::API
     format :json
@@ -16,6 +18,5 @@ module V1
 
     mount V1::BookAPI
     mount V1::UserAPI
-
   end
 end
