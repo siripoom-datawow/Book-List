@@ -5,7 +5,7 @@ require 'bcrypt'
 module V1
   class UserAPI < Grape::API
     namespace 'user' do
-      desc 'Create user'
+      desc 'Create User'
 
       params do
         requires :email, type: String, desc: 'User email'
@@ -26,7 +26,7 @@ module V1
         end
       end
 
-      desc 'Login'
+      desc 'Sign In'
 
       params do
         requires :email, type: String, desc: 'User email'
@@ -46,6 +46,21 @@ module V1
         return { status: 'success', auth_token: user.auth_token } if decrypted_password == password
 
         return { status: 'fail', message: 'Invalid email or password' }
+      end
+
+      desc 'Sign Out'
+
+      delete '/sign_out' do
+        current_user = Rails.cache.read("current_user")
+        user = User.find(current_user)
+
+        Rails.cache.delete("current_user")
+
+        if user.update!({auth_token: SecureRandom.hex})
+          return { status: 'success', message: "logout complete"}
+        else
+          return { status: 'fail', message: 'logout fail' }
+        end
       end
     end
   end
