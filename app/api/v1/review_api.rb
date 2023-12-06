@@ -8,6 +8,8 @@ module V1
       desc 'Get raviews'
       get '/' do
         reviews = Review.where({book_id: params[:book_id]})
+
+        reviews.as_json
       end
 
       desc 'create review'

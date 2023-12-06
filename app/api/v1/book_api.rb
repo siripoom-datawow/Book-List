@@ -4,31 +4,49 @@ module V1
   class BookAPI < Grape::API
     before { authenticate! }
 
+    helpers do
+      def add_views_cache(book_id)
+        views_cache = Rails.cache.read('views').dup || {}
+
+        if views_cache.key?(book_id)
+          views_cache[book_id] += 1
+        else
+          views_cache[book_id] = 1
+        end
+
+        Rails.cache.write('views', views_cache)
+      end
+    end
+
     namespace 'book' do
       desc 'Get all books'
       params do
         optional :page, type: Integer
+        optional :per_page, type: Integer
       end
 
       get '/' do
         page = params[:page] || 1
-        books_lastest = Book.page(page).per(10).last.id
+        per_page = params[:per_page] || 10
 
-        Rails.cache.fetch("books/#{page}/#{books_lastest}") do
-          @books = Book.page(page).per(10)
+        books_lastest = Book.last.id
 
-          @books.to_json
+        Rails.cache.fetch("books/#{page}/#{per_page}/#{books_lastest}") do
+          @books = Book.page(page).per(per_page)
+
+          @books.as_json
         end
       end
 
       desc 'get single book'
       get '/:id' do
         book_id = params[:id]
+        add_views_cache(book_id)
 
         Rails.cache.fetch("book/#{book_id}") do
           @book = Book.find(book_id)
 
-          @book.to_json
+          @book.as_json
         end
       end
 
@@ -48,7 +66,7 @@ module V1
         book = Book.new(name:, description:, release:, user_id: user)
 
         if book.save!
-          { status: 200, message: 'create complete' }
+          { status: 201, message: 'create complete' }
         else
           { status: 500, message: 'create fail', errors: book.errors.full_messages }
         end

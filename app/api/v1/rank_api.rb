@@ -14,7 +14,15 @@ module V1
           ranks.reload
         end
 
-        ranks
+        ranks.as_json
+      end
+
+      desc 'Get single rank'
+      get '/:rank_id' do
+        rank_id = params[:rank_id]
+        rank = Rank.find(rank_id)
+
+        rank.as_json
       end
     end
   end
