@@ -72,14 +72,14 @@ RSpec.describe ReviewsController, type: :controller do
 
       before { sign_in other_user }
 
-      it 'Cannot update review' do
-        expect { subject }.to raise_error(Pundit::NotAuthorizedError)
+      it 'Update fail if user now authorized' do
+        expect(subject.status).to eq(403)
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    subject { delete :destroy, params: { book_id: book.id, id: review.id } }
+    subject { delete :destroy, params: { book_id: book.id, id: review.id }, format: :json }
 
     let!(:user) { create(:user) }
     let(:book) { create(:book, user_id: user.id) }
@@ -99,8 +99,8 @@ RSpec.describe ReviewsController, type: :controller do
 
       before { sign_in other_user }
 
-      it 'Cannot delete review' do
-        expect { subject }.to raise_error(Pundit::NotAuthorizedError)
+      it 'Update fail if user now authorized' do
+        expect(subject.status).to eq(403)
       end
     end
   end
