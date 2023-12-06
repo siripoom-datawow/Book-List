@@ -21,6 +21,5 @@ module V1
     mount V1::ReviewAPI
     mount V1::RankAPI
     mount V1::BookRankAPI
-
   end
 end

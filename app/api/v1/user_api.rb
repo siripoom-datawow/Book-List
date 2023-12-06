@@ -51,16 +51,14 @@ module V1
       desc 'Sign Out'
 
       delete '/sign_out' do
-        current_user = Rails.cache.read("current_user")
+        current_user = Rails.cache.read('current_user')
         user = User.find(current_user)
 
-        Rails.cache.delete("current_user")
+        Rails.cache.delete('current_user')
 
-        if user.update!({auth_token: SecureRandom.hex})
-          return { status: 'success', message: "logout complete"}
-        else
-          return { status: 'fail', message: 'logout fail' }
-        end
+        return { status: 'success', message: 'logout complete' } if user.update!({ auth_token: SecureRandom.hex })
+
+        return { status: 'fail', message: 'logout fail' }
       end
     end
   end

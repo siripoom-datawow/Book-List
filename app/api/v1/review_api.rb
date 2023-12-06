@@ -7,7 +7,7 @@ module V1
     namespace 'book/:book_id/review' do
       desc 'Get raviews'
       get '/' do
-        reviews = Review.where({book_id: params[:book_id]})
+        reviews = Review.where({ book_id: params[:book_id] })
 
         reviews.as_json
       end
@@ -47,13 +47,12 @@ module V1
         if review.update!({ comment:, star: })
           { status: 200, message: 'update review complete' }
         else
-          { status: 500, message: 'update review fail', errors: review .errors.full_messages }
+          { status: 500, message: 'update review fail', errors: review.errors.full_messages }
         end
       end
 
       desc 'Delete review'
       delete '/:review_id' do
-
         review = Review.find(params[:review_id])
 
         if review.destroy!
