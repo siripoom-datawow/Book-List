@@ -59,6 +59,10 @@ gem 'sidekiq', '~> 7.2'
 
 gem 'sidekiq-cron', '~> 1.11'
 
+gem 'grape', '~> 2.0'
+
+gem 'bcrypt', '~> 3.1', '>= 3.1.20'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mswin mswin64 mingw x64_mingw]
@@ -97,4 +101,8 @@ group :test do
   gem 'faker', '~> 3.2', '>= 3.2.2'
 
   gem 'rspec-sidekiq', '~> 4.1'
+
+  gem 'bcrypt', '~> 3.1', '>= 3.1.20'
+
+  gem 'grape', '~> 2.0'
 end
