@@ -7,12 +7,11 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   devise_for :users
-root 'books#index'
+  root 'books#index'
 
-resources :books do
-  resources :reviews
-end
+  resources :books do
+    resources :reviews
+  end
 
-resources :ranks
-
+  resources :ranks
 end

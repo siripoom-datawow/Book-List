@@ -94,9 +94,8 @@ RSpec.describe BooksController, type: :controller do
         end
       end
 
-
       context 'HTML format when validation fail' do
-        let(:params) { { book: { name: '', description: '', release: '' }} }
+        let(:params) { { book: { name: '', description: '', release: '' } } }
 
         it 'redirect to rooy path and flash error message' do
           expect(subject).to redirect_to(root_path)
@@ -141,7 +140,7 @@ RSpec.describe BooksController, type: :controller do
       end
 
       context 'HTML format when validation fail' do
-        subject { put :update, params: { id: book.id, book: book_attr }}
+        subject { put :update, params: { id: book.id, book: book_attr } }
         let(:book_attr) { attributes_for(:book, name: '').merge(user_id: user.id) }
 
         it 'response validation fail' do
@@ -161,7 +160,6 @@ RSpec.describe BooksController, type: :controller do
         expect(subject.status).to eq(403)
       end
     end
-
   end
 
   describe 'DELETE #deatroy' do
