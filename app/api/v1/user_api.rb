@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'bcrypt'
-
 module V1
   class UserAPI < Grape::API
     namespace 'user' do
@@ -15,9 +13,7 @@ module V1
       post '/sign_up' do
         email = params[:email]
         password = params[:password]
-
-        encrypted_password = BCrypt::Password.create(password)
-        user = User.create(email:, encrypted_password:)
+        user = User.create(email:, password:)
 
         if user.valid?
           { status: 'success', message: 'User created successfully' }
@@ -56,7 +52,7 @@ module V1
 
         Rails.cache.delete('current_user')
 
-        return { status: 'success', message: 'logout complete' } if user.update!({ auth_token: SecureRandom.hex })
+        return { status: 'success', message: 'logout complete' } if user.regenerate_auth_token
 
         return { status: 'fail', message: 'logout fail' }
       end

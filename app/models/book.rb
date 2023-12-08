@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Book < ApplicationRecord
-  has_many :bookranks, class: "BookRank", dependent: :destroy
+  has_many :bookranks, class_name: "BookRank", dependent: :destroy
   has_many :ranks, through: :bookranks
   has_many :reviews, dependent: :destroy
   belongs_to :user

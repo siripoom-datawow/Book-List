@@ -21,44 +21,45 @@ module V1
       post '/' do
         comment = params[:comment]
         star = params[:star]
-        user = Rails.cache.read('current_user')
 
-        review = Review.new(comment:, star:, user_id: user, book_id: params[:book_id])
+        review = Review.new(params.slice(:comment,:star).merge(user:@user, book_id: params[:book_id]))
 
-        if review.save!
+        if review.save
           { status: 200, message: 'create review complete' }
         else
           { status: 500, message: 'create review fail', errors: review.errors.full_messages }
         end
       end
 
-      desc 'update review'
-      params do
-        requires :comment, type: String
-        optional :star, type: Float
-      end
 
-      put '/:review_id' do
-        comment = params[:comment]
-        star = params[:star]
-
-        review = Review.find(params[:review_id])
-
-        if review.update!({ comment:, star: })
-          { status: 200, message: 'update review complete' }
-        else
-          { status: 500, message: 'update review fail', errors: review.errors.full_messages }
+      route_param :review_id do
+        desc 'update review'
+        params do
+          requires :comment, type: String
+          optional :star, type: Float
         end
-      end
+        put '/' do
+          comment = params[:comment]
+          star = params[:star]
 
-      desc 'Delete review'
-      delete '/:review_id' do
-        review = Review.find(params[:review_id])
+          review = Review.find(params[:review_id])
 
-        if review.destroy!
-          { status: 200, message: 'Delete review complete' }
-        else
-          { status: 500, message: 'Delete review fail', errors: review.errors.full_messages }
+          if review.update({ comment:, star: })
+            { status: 200, message: 'update review complete' }
+          else
+            { status: 500, message: 'update review fail', errors: review.errors.full_messages }
+          end
+        end
+
+        desc 'Delete review'
+        delete '/' do
+          review = Review.find(params[:review_id])
+
+          if review.destroy
+            { status: 200, message: 'Delete review complete' }
+          else
+            { status: 500, message: 'Delete review fail', errors: review.errors.full_messages }
+          end
         end
       end
     end

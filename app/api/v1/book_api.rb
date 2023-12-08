@@ -16,6 +16,14 @@ module V1
 
         Rails.cache.write('views', views_cache)
       end
+
+      def fetch_data(keys,method)
+        Rails.cache.fetch(keys) do
+        @data = method
+
+        @data.as_json
+      end
+      end
     end
 
     namespace 'book' do
@@ -28,26 +36,32 @@ module V1
       get '/' do
         page = params[:page] || 1
         per_page = params[:per_page] || 10
-
         books_lastest = Book.last.id
 
-        Rails.cache.fetch("books/#{page}/#{per_page}/#{books_lastest}") do
-          @books = Book.page(page).per(per_page)
+        fetch_data("books/#{page}/#{per_page}/#{books_lastest}",Book.page(page).per(per_page))
+      end
 
-          @books.as_json
+      post '/' do
+        name = params[:name]
+        description = params[:description]
+        release = params[:release]
+
+        book = Book.new(params.slice(:name,:description,:release).merge(user:@user))
+
+        if book.save
+          { status: 201, message: 'create complete' }
+        else
+          { status: 500, message: 'create fail', errors: book.errors.full_messages }
         end
       end
 
-      desc 'get single book'
-      get '/:id' do
+      route_param :id do
+        desc 'get single book'
+      get '/' do
         book_id = params[:id]
         add_views_cache(book_id)
 
-        Rails.cache.fetch("book/#{book_id}") do
-          @book = Book.find(book_id)
-
-          @book.as_json
-        end
+        fetch_data("book/#{book_id}",Book.find(book_id))
       end
 
       desc 'create book'
@@ -57,29 +71,13 @@ module V1
         requires :release, type: DateTime
       end
 
-      post '/' do
-        name = params[:name]
-        description = params[:description]
-        release = params[:release]
-        user = Rails.cache.read('current_user')
-
-        book = Book.new(name:, description:, release:, user_id: user)
-
-        if book.save!
-          { status: 201, message: 'create complete' }
-        else
-          { status: 500, message: 'create fail', errors: book.errors.full_messages }
-        end
-      end
-
       desc 'update book'
       params do
         requires :name, type: String
         optional :description, type: String
         requires :release, type: DateTime
       end
-
-      put '/:id' do
+      put '/' do
         book_id = params[:id]
         name = params[:name]
         description = params[:description]
@@ -87,7 +85,7 @@ module V1
 
         book = Book.find(book_id)
 
-        if book.update!({ name:, description:, release: })
+        if book.update({ name:, description:, release: })
           { status: 200, message: 'update complete' }
         else
           { status: 500, message: 'update fail', errors: book.errors.full_messages }
@@ -95,16 +93,17 @@ module V1
       end
 
       desc 'Delete book'
-      delete '/:id' do
+      delete '/' do
         book_id = params[:id]
 
         book = Book.find(book_id)
 
-        if book.destroy!
+        if book.destroy
           { status: 200, message: 'Delete complete' }
         else
           { status: 500, message: 'Delete fail', errors: book.errors.full_messages }
         end
+      end
       end
     end
   end
