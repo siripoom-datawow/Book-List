@@ -3,7 +3,7 @@
 class RankCalculationService
   def perform
     @previous_rank = Rank.last
-    return unless @previous_rank.present?
+    return if @previous_rank.blank?
 
     @book_ranks = BookRank.where(rank_id: @previous_rank.id).order(view: :desc)
 

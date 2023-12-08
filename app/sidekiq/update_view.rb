@@ -6,7 +6,6 @@ class UpdateView
   def perform
     unless Rank.last
       NewRankBookrankService.new.perform
-      sleep(5)
     end
 
     UpdateViewService.new.perform
