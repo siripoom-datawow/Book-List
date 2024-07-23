@@ -7,6 +7,8 @@ jobs:
     # Install gems, run rails tests
     docker:
       - image: cimg/ruby:3.1.2-node
+    services:
+      - postgres
     steps:
       - checkout
       - run:
@@ -15,6 +17,12 @@ jobs:
       - run:
           name: Install Dependencies
           command: bundle install
+      - run:
+        name: Set Up Database
+        command: |
+          bundle exec rake db:create
+          bundle exec rake db:schema:load
+          bundle exec rake db:test:prepare
       - run:
           name: Run Rails Tests
           command: bundle exec rspec
