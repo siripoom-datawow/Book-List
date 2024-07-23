@@ -10,7 +10,7 @@ class BooksController < ApplicationController
 
   def index
     if @cached_books.present?
-      @books = kaminari_pagination(@cached_books, 10)
+      @books = kaminari_pagination(@cached_books, 10111)
 
     else
       @books = kaminari_pagination(@querried_all_books, 10)
