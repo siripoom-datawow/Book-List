@@ -17,15 +17,15 @@ ActiveRecord::Schema[7.1].define(version: 20_231_123_070_416) do
   enable_extension 'plpgsql'
 
   create_table 'books', force: :cascade do |t|
-    t.string 'name'
+    t.string 'name', null: false
     t.text 'description'
-    t.datetime 'release'
+    t.datetime 'release', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
   end
 
   create_table 'reviews', force: :cascade do |t|
-    t.string 'comment'
+    t.string 'comment', null: false
     t.float 'star'
     t.bigint 'book_id', null: false
     t.datetime 'created_at', null: false
