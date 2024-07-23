@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
 class ReviewsController < ApplicationController
+  before_action :authenticate_user!
   before_action :find_book
   before_action :find_review, only: %i[edit update destroy]
 
   def create
-    @review_create = @book.reviews.create!(review_params)
+    @review_create = @book.reviews.create!(review_params.merge(user_id: current_user.id))
     redirect_to @book
   end
 
   def edit; end
 
   def update
+    authorize @review, policy_class: ReviewPolicy
     raise ActiveRecord::RecordNotSaved, @review unless @review.update(review_params)
 
     flash[:success] = 'Review update completed'
@@ -19,6 +21,7 @@ class ReviewsController < ApplicationController
   end
 
   def destroy
+    authorize @review, policy_class: ReviewPolicy
     if @review.destroy
       redirect_to @book
     else
