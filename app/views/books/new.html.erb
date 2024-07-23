@@ -1,0 +1,8 @@
+<div>
+  <%= link_to 'Back', books_path%>
+  <h1 class="font-bold text-4xl">Create New Book</h1>
+    <% @book.errors.full_messages_for(:name).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  <%= render 'form' , book:@book%>
+</div>

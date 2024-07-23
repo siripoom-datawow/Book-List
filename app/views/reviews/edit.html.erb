@@ -1,0 +1,17 @@
+<div>
+  <%= link_to 'Back', book_path(@book)%>
+  <h1 class="font-bold text-4xl">Review Edit</h1>
+  <%= form_with model: [@book ,@review] do |form|%>
+    <p>
+      <%= form.label :comment %><br>
+      <%= form.text_field :comment %>
+    </p>
+    <p>
+      <%= form.label :star %><br>
+      <%= form.number_field :star, in: 0..5, step: 0.1 , value: @review.star %>
+    </p>
+    <p>
+      <%= form.submit %>
+    </p>
+  <%end%>
+</div>
