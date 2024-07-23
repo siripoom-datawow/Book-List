@@ -7,6 +7,7 @@ jobs:
     # Install gems, run rails tests
     docker:
       - image: cimg/ruby:3.1.2-node
+      - image: postgres:12
     services:
       - postgres
     steps:
