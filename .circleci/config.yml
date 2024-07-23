@@ -10,9 +10,14 @@ jobs:
       - image: cimg/ruby:3.1.2-node
     steps:
       - checkout
-      - ruby/install-deps
+       - run:
+          name: Update Bundler
+          command: gem install bundler
       - run:
-          name: rails test
+          name: Install Dependencies
+          command: bundle install
+      - run:
+          name: Run Rails Tests
           command: bundle exec rails test
   deploy:
     # This is an example deploy job, not actually used by the workflow
