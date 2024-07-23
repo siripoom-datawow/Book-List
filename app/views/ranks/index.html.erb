@@ -1,0 +1,13 @@
+<div class='w-full h-full flex flex-col '>
+  <%= link_to 'Back', books_path %>
+  <h1 class = "text-4xl mt-8">Date ⌛</h1>
+  <div class="flex flex-col">
+    <% @ranks.each_with_index do |rank, index| %>
+      <%unless index === @ranks.length-1%>
+        <a href='<%= rank_path(rank) %>'> Date: <%= rank.date.to_s.split(" ")[0] %> </a>
+      <%end%>
+    <% end %>
+  </div>
+  <h1 class ="mt-8 text-4xl">Ranking 🌟</h1>
+  <p>Please select a ranking date</p>
+</div>

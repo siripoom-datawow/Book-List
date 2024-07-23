@@ -1,0 +1,7 @@
+update_views_to_DB:
+  cron: "* * * * * *"
+  class: "UpdateView"
+
+ranking_summation:
+  cron: "0 17 * * *"
+  class: "RankingSummation"

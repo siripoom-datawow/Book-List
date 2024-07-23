@@ -1,6 +1,11 @@
-<div>
-  <div>
-    <h1>Book List</h1>
+<div class='w-full h-full flex flex-col '>
+    <h1 class="font-bold">Welcome!
+      <%= current_user.email %>
+    </h1>
+    <%= button_to "Signout", destroy_user_session_path, :method => :delete, class:"bg-red-200"%>
+  <div class='mt-8'>
+    <%= link_to 'See Top books today', ranks_path%>
+    <h1 class='font-bold text-4xl'>Book List</h1>
     <%= link_to 'Create Book', new_book_path%>
   </div>
   <section>
@@ -8,16 +13,24 @@
       <p> No book found</p>
     <%else%>
       <%@books.each do |book| %>
-        <div class='mt-8'>
+        <div class='mt-8  flex gap-2'>
           <a href='<%= book_path(book)%>'> <%= book.name %> </a>
           <p> <%= book.description %> </p>
           <p> <%= book.release %> </p>
-          <div>
-            <%= link_to 'Edit', edit_book_path(book)%>
-            <%= button_to "delete", book_path(book), :method => :delete %>
+          <div class="flex gap-2">
+            <% if policy(book).update? %>
+              <%= link_to 'Edit', edit_book_path(book)%>
+              <%= button_to "delete", book_path(book), :method => :delete %>
+            <% end %>
           </div>
         </div>
       <%end%>
     <%end%>
+    <div class="mt-8 flex gap-2">
+      <h2 class="font-bold">Page <%= @books.current_page %> from <%= @books.total_pages %> ||</h2>
+      <%= paginate @books %>
+      <h2 class="font-bold">Total books: <%=  @total_books%></h2>
+    </div>
+
   </section>
 </div>
