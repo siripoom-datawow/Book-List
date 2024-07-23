@@ -1,14 +1,15 @@
 version: 2.1
 
-executors:
-  ruby-executor:
-    docker:
-      - image: cimg/ruby:3.1.2-node
-      - image: postgres:12 # Add PostgreSQL service image
+orbs:
+  ruby: circleci/ruby@2.0.1
 
 jobs:
   test-ruby:
-    executor: ruby-executor
+    docker:
+      - image: cimg/ruby:3.1.2-node
+      - image: postgres:12
+    environment:
+      POSTGRES_PASSWORD: your_password # Set the PostgreSQL superuser password
     steps:
       - checkout
       - run:
@@ -17,6 +18,13 @@ jobs:
       - run:
           name: Install Dependencies
           command: bundle install
+      - run:
+          name: Wait for PostgreSQL to be ready
+          command: |
+            until pg_isready -h localhost -p 5432; do
+              echo "Waiting for PostgreSQL to be ready..."
+              sleep 2
+            done
       - run:
           name: Set Up Database
           command: |
