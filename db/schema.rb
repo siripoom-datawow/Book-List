@@ -12,9 +12,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 20_231_128_060_923) do
+ActiveRecord::Schema[7.1].define(version: 20_231_204_110_046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
+
+  create_table 'book_ranks', force: :cascade do |t|
+    t.bigint 'book_id', null: false
+    t.bigint 'rank_id', null: false
+    t.integer 'view'
+    t.integer 'order_id', default: 0
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['book_id'], name: 'index_book_ranks_on_book_id'
+    t.index ['rank_id'], name: 'index_book_ranks_on_rank_id'
+  end
 
   create_table 'books', force: :cascade do |t|
     t.string 'name', null: false
@@ -24,6 +35,12 @@ ActiveRecord::Schema[7.1].define(version: 20_231_128_060_923) do
     t.datetime 'updated_at', null: false
     t.integer 'user_id'
     t.index ['user_id'], name: 'index_books_on_user_id'
+  end
+
+  create_table 'ranks', force: :cascade do |t|
+    t.datetime 'date'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
   create_table 'reviews', force: :cascade do |t|
@@ -45,10 +62,14 @@ ActiveRecord::Schema[7.1].define(version: 20_231_128_060_923) do
     t.datetime 'remember_created_at'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.string 'auth_token'
+    t.index ['auth_token'], name: 'index_users_on_auth_token', unique: true
     t.index ['email'], name: 'index_users_on_email', unique: true
     t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
   end
 
+  add_foreign_key 'book_ranks', 'books'
+  add_foreign_key 'book_ranks', 'ranks'
   add_foreign_key 'books', 'users'
   add_foreign_key 'reviews', 'books'
   add_foreign_key 'reviews', 'users'

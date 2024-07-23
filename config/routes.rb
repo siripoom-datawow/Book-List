@@ -1,10 +1,17 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  devise_for :users
-  root 'books#index'
+  mount ::V1::API => '/api/v1'
 
-  resources :books do
-    resources :reviews
-  end
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
 end
+
+# devise_for :users
+# root 'books#index'
+
+# resources :books do
+#   resources :reviews
+# end
+
+# resources :ranks
