@@ -1,13 +1,14 @@
 version: 2.1
 
-orbs:
-  ruby: circleci/ruby@2.0.1
-
-jobs:
-  test-ruby:
+executors:
+  ruby-executor:
     docker:
       - image: cimg/ruby:3.1.2-node
       - image: postgres:12 # Add PostgreSQL service image
+
+jobs:
+  test-ruby:
+    executor: ruby-executor
     steps:
       - checkout
       - run:
